@@ -40,11 +40,22 @@ public class Ball : MonoBehaviour
         {
             rb.velocity=new Vector3(0f,50* Time.deltaTime*5, 0f);
         }
+        else
+        {
+            if(collision.gameObject.CompareTag("Enemy")==true)
+            {
+                Destroy(collision.transform.parent.gameObject);
+            }
+            if (collision.gameObject.CompareTag("plane") == true)
+            {
+                Debug.Log("Over");
+            }
+        }    
 
     }
     private void OnCollisionStay(Collision collision)
     {
-        if (!smash || collision.gameObject.CompareTag("Finish"))
+        if (!smash || collision.gameObject.CompareTag("Finish")==true)
         {
 
             rb.velocity = new Vector3(0f, 50 * Time.deltaTime * 5, 0f);
