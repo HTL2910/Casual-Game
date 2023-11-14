@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UIElements;
 
 public class LevelSpawner : MonoBehaviour
 {
@@ -16,11 +18,13 @@ public class LevelSpawner : MonoBehaviour
 
     private void Start()
     {
+        level = PlayerPrefs.GetInt("Level", 1);
        if(level>9)
        {
             addOn = 0;
        }
         ModelSelection();
+        float random=Random.value;
         for(i = 0; i>-level-addOn;i-=0.5f)
         {
             if(level<=20)
@@ -41,6 +45,23 @@ public class LevelSpawner : MonoBehaviour
             }
             temp1.transform.position=new Vector3(0,i-0.01f,0);
             temp1.transform.eulerAngles = new Vector3(0, i *8, 0);
+
+            if (Mathf.Abs(i) >= level * 0.3f && Mathf.Abs(i) <= level * 0.6f)
+            {
+                temp1.transform.eulerAngles = new Vector3(0, i * 8, 0);
+                temp1.transform.eulerAngles += Vector3.up * 180;
+
+            }
+            else if (Mathf.Abs(i) >= level * 0.8f)
+            {
+                temp1.transform.eulerAngles = new Vector3(0, i * 8, 0);
+                if(random>0.75f)
+                {
+                    temp1.transform.eulerAngles += Vector3.up * 180;
+                }    
+            }    
+
+            temp1.transform.parent = FindObjectOfType<Rotator>().transform;
         }
         temp2 = Instantiate(winPrefabs);
         temp2.transform.position=new Vector3(0,i-0.01f,0);
@@ -84,5 +105,10 @@ public class LevelSpawner : MonoBehaviour
 
         }
     }
+    public void NextLevel()
+    {
+        PlayerPrefs.SetInt("Level", PlayerPrefs.GetInt("Level") + 1);
+        SceneManager.LoadScene(0);
+    }    
     //https://www.youtube.com/watch?v=SLqF-Xsfbd0
 }

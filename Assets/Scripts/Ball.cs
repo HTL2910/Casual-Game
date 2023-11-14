@@ -5,29 +5,86 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
-    [SerializeField] private bool smash;
-
+    private float currentTime;
+    [SerializeField] private bool smash,invincible;
+    public enum BallState
+    {
+        Prepare,
+        Playing,
+        Died,
+        Finish
+    }
+    [HideInInspector] public BallState ballState=BallState.Prepare;
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
     }
     private void Update()
     {
-        if(Input.GetMouseButtonDown(0))
+        if(ballState==BallState.Playing)
         {
-            smash = true;
+            if (Input.GetMouseButtonDown(0))
+            {
+                smash = true;
+            }
+            if (Input.GetMouseButtonUp(0))
+            {
+                smash = false;
+            }
+            if (invincible)
+            {
+                currentTime -= Time.deltaTime * 0.35f;
+            }
+            else
+            {
+                if (smash)
+                {
+                    currentTime += Time.deltaTime * 0.8f;
+                }
+                else
+                {
+                    currentTime -= Time.deltaTime * 0.5f;
+                }
+            }
+            if (currentTime >= 1)
+            {
+                currentTime = 1;
+                invincible = true;
+            }
+            else
+            {
+                currentTime = 0;
+                invincible = false;
+            }
         }
-        if(Input.GetMouseButtonUp(0))
+        if(ballState==BallState.Prepare)
         {
-            smash=false;
+            if(Input.GetMouseButtonDown(0))
+            {
+                ballState = BallState.Playing;
+            }
         }
+        if(ballState==BallState.Finish)
+        {
+            if(Input.GetMouseButtonDown(0))
+            {
+                FindObjectOfType<LevelSpawner>().NextLevel();
+            }    
+        }
+        
+
     }
     private void FixedUpdate()
     {
-        if(Input.GetMouseButtonDown(0))
+        
+        if (ballState==BallState.Playing)
         {
-            smash = true;
-            rb.velocity = new Vector3(0f,100 * Time.deltaTime * 7, 0f);
+            if (Input.GetMouseButtonDown(0))
+            {
+                smash = true;
+                rb.velocity = new Vector3(0f, -100 * Time.deltaTime * 7, 0f);
+            }    
+                
         }
         if(rb.velocity.y>5f)
         {
@@ -42,14 +99,30 @@ public class Ball : MonoBehaviour
         }
         else
         {
-            if(collision.gameObject.CompareTag("Enemy")==true)
+            if(invincible)
             {
-                Destroy(collision.transform.parent.gameObject);
+                if (collision.gameObject.CompareTag("enemy") == true || collision.gameObject.CompareTag("plane") == true)
+                {
+                    collision.transform.parent.GetComponent<StackController>().ShatterAllParts();
+                }    
             }
-            if (collision.gameObject.CompareTag("plane") == true)
+            else
             {
-                Debug.Log("Over");
+                if (collision.gameObject.CompareTag("enemy") == true)
+                {
+                    collision.transform.parent.GetComponent<StackController>().ShatterAllParts();
+                }
+                if (collision.gameObject.CompareTag("plane") == true)
+                {
+                    Debug.Log("Game Over");
+                    //Destroy(gameObject);
+                }
             }
+           
+        }   
+        if(collision.gameObject.CompareTag("Finish") && ballState==BallState.Playing)
+        {
+            ballState = BallState.Finish;
         }    
 
     }
