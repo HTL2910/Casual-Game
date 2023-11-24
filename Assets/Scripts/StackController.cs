@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class StackController : MonoBehaviour
 {
-    [SerializeField] private StackPartController[] stackPartControlls = null;
+    [SerializeField] 
+    private StackPartController[] stackPartControlls = null;
 
     public void ShatterAllParts()
     {
         if(transform.parent != null)
         {
             transform.parent = null;
+            FindObjectOfType<Ball>().IncreaseBrokenStacks();
         }
         foreach(StackPartController o in stackPartControlls)
         {
