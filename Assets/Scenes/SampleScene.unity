@@ -310,7 +310,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 594c4c659d1a7c54cabf88a62ea5c51d, type: 2}
+  - {fileID: 2100006, guid: ebd08563c5f2b524a842d757f8a02ff2, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1036,6 +1036,9 @@ MonoBehaviour:
   levelSlider: {fileID: 975218727}
   currentLevelImg: {fileID: 176806095}
   nextLevelImg: {fileID: 834474655}
+  ballMat: {fileID: 0}
+  currentLevel: {fileID: 0}
+  nextLevel: {fileID: 0}
 --- !u!1 &692026764
 GameObject:
   m_ObjectHideFlags: 0
@@ -1065,6 +1068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 119ab0628a1aa8f4bb3c486bfd3f1c56, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  scoreText: {fileID: 0}
   score: 10
 --- !u!4 &692026766
 Transform:
@@ -1977,7 +1981,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -250}
+  m_AnchoredPosition: {x: 0, y: -100}
   m_SizeDelta: {x: 0, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!114 &1823239960
@@ -2072,7 +2076,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -150}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: -300, y: 100}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!1660057539 &9223372036854775807
