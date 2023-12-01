@@ -5,8 +5,10 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
+    [SerializeField] private bool smash;
+    [SerializeField] private bool invincible;
+
     private float currentTime;
-    [SerializeField] private bool smash,invincible;
     public enum BallState
     {
         Prepare,
@@ -17,7 +19,7 @@ public class Ball : MonoBehaviour
     [HideInInspector] public BallState ballState=BallState.Prepare;
     public AudioClip bounceOffClip, deadClip, winclip, destroyClip, iDestroyClip;
 
-    private void Start()
+    private void Awake()
     {
         rb = GetComponent<Rigidbody>();
     }
@@ -53,7 +55,7 @@ public class Ball : MonoBehaviour
                 currentTime = 1;
                 invincible = true;
             }
-            else
+            else if (currentTime <= 0) 
             {
                 currentTime = 0;
                 invincible = false;
@@ -81,7 +83,7 @@ public class Ball : MonoBehaviour
         
         if (ballState==BallState.Playing)
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
                 smash = true;
                 rb.velocity = new Vector3(0f, -100 * Time.deltaTime * 7, 0f);
