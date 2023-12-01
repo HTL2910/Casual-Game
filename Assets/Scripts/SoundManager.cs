@@ -11,7 +11,7 @@ public class SoundManager : MonoBehaviour
 
     private void Awake()
     {
-        instance = this;
+        MakeSingleton();
         audioSource = GetComponent<AudioSource>();
     }
     public void SoundOff()
@@ -25,4 +25,16 @@ public class SoundManager : MonoBehaviour
             audioSource.PlayOneShot(clip, volume);
         }
     }    
+    void MakeSingleton()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
 }

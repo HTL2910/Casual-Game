@@ -9,6 +9,7 @@ public class Ball : MonoBehaviour
     [SerializeField] private bool invincible;
 
     private float currentTime;
+    private int currentBrokenStacks, totalStacks;
     public enum BallState
     {
         Prepare,
@@ -22,6 +23,11 @@ public class Ball : MonoBehaviour
     private void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        currentBrokenStacks = 0;
+    }
+    private void Start()
+    {
+        totalStacks = FindObjectsOfType<StackController>().Length;
     }
     private void Update()
     {
@@ -97,6 +103,7 @@ public class Ball : MonoBehaviour
     }
     public void IncreaseBrokenStacks()
     {
+        currentBrokenStacks++;
         if(!invincible)
         {
             ScoreManager.instance.AddScore(1);
@@ -122,6 +129,7 @@ public class Ball : MonoBehaviour
                 if (collision.gameObject.CompareTag("enemy") == true || collision.gameObject.CompareTag("plane") == true)
                 {
                     collision.transform.parent.GetComponent<StackController>().ShatterAllParts();
+                    SoundManager.instance.PlaySoundFX(bounceOffClip, 0.5f);
                 }    
             }
             else
@@ -129,6 +137,7 @@ public class Ball : MonoBehaviour
                 if (collision.gameObject.CompareTag("enemy") == true)
                 {
                     collision.transform.parent.GetComponent<StackController>().ShatterAllParts();
+                    SoundManager.instance.PlaySoundFX(bounceOffClip, 0.5f);
                 }
                 if (collision.gameObject.CompareTag("plane") == true)
                 {
@@ -139,7 +148,8 @@ public class Ball : MonoBehaviour
                 }
             }
            
-        }   
+        }
+        FindObjectOfType<GameUI>().LevelSliderFill(currentBrokenStacks / (float)totalStacks);
         if(collision.gameObject.CompareTag("Finish") && ballState==BallState.Playing)
         {
             ballState = BallState.Finish;
