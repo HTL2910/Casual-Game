@@ -12,7 +12,8 @@ public class StackController : MonoBehaviour
         if(transform.parent != null)
         {
             transform.parent = null;
-            //FindObjectOfType<Ball>().IncreaseBrokenStacks();
+            // Ball.instance.IncreaseBrokenStacks();
+            FindObjectOfType<Ball>().IncreaseBrokenStacks();
         }
         foreach(StackPartController o in stackPartControlls)
         {

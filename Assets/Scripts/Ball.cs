@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement;
 public class Ball : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
@@ -9,7 +9,9 @@ public class Ball : MonoBehaviour
     [SerializeField] private bool invincible;
 
     private float currentTime;
-    private int currentBrokenStacks, totalStacks;
+    private int currentBrokenStacks=1;
+    private int totalStacks;
+    // public static Ball instance;
     public enum BallState
     {
         Prepare,
@@ -24,6 +26,7 @@ public class Ball : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         currentBrokenStacks = 0;
+        // instance=this;
     }
     private void Start()
     {
@@ -117,6 +120,7 @@ public class Ball : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        
         if (!smash)
         {
             rb.velocity=new Vector3(0f,50* Time.deltaTime*5, 0f);
@@ -130,6 +134,7 @@ public class Ball : MonoBehaviour
                 {
                     collision.transform.parent.GetComponent<StackController>().ShatterAllParts();
                     SoundManager.instance.PlaySoundFX(bounceOffClip, 0.5f);
+                    currentBrokenStacks++;
                 }    
             }
             else
@@ -138,13 +143,16 @@ public class Ball : MonoBehaviour
                 {
                     collision.transform.parent.GetComponent<StackController>().ShatterAllParts();
                     SoundManager.instance.PlaySoundFX(bounceOffClip, 0.5f);
+                    currentBrokenStacks++;
                 }
                 if (collision.gameObject.CompareTag("plane") == true)
                 {
                     Debug.Log("Game Over");
                     ScoreManager.instance.ResetScore();
                     SoundManager.instance.PlaySoundFX(deadClip, 0.5f);
-                    //Destroy(gameObject);
+                    ballState=BallState.Died;
+                    StartCoroutine(LoseGame(0.5f));
+                    
                 }
             }
            
@@ -164,5 +172,10 @@ public class Ball : MonoBehaviour
 
             rb.velocity = new Vector3(0f, 50 * Time.deltaTime * 5, 0f);
         }
+    }
+    IEnumerator LoseGame(float time)
+    {
+        yield return new WaitForSeconds(time);
+        SceneManager.LoadScene(0);
     }
 }

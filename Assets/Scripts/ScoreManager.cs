@@ -3,16 +3,16 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using TMPro;
 using UnityEngine;
-
+using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour
 {
     public static ScoreManager instance;
-    private TextMeshProUGUI scoreText;
+    [SerializeField] private Text scoreText;
     public int score = 10;
     private void Awake()
     {
         MakeSingleton();
-        scoreText = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+        scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
     }
     private void Start()
     {
@@ -22,7 +22,7 @@ public class ScoreManager : MonoBehaviour
     {
         if (scoreText == null)
         {
-            scoreText = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
+            scoreText = GameObject.Find("ScoreText").GetComponent<Text>();
             scoreText.text=score.ToString();
         }
     }
